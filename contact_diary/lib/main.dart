@@ -1,10 +1,16 @@
+import 'package:contact_diary/Controllers/Theme_Contoller.dart';
 import 'package:contact_diary/utils/routes_utils.dart';
 import 'package:contact_diary/views/screens/HomePage.dart';
+import 'package:contact_diary/views/screens/SettingPage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    const MyApp(),
+    ChangeNotifierProvider(
+      create: (context) => ThemeController(),
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -19,20 +25,18 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         appBarTheme: const AppBarTheme(
           centerTitle: true,
-          backgroundColor: Color(0xff38C9C4),
-          foregroundColor: Color(0xffffffff),
-        ),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(
-            color: Colors.teal,
-            fontWeight: FontWeight.w700,
-          ),
         ),
       ),
-      themeMode: ThemeMode.light,
+      darkTheme: ThemeData.dark(
+        useMaterial3: true,
+      ),
+      themeMode: Provider.of<ThemeController>(context).getTheme
+          ? ThemeMode.dark
+          : ThemeMode.light,
       initialRoute: MyRoutes.HomePage,
       routes: {
         MyRoutes.HomePage: (context) => const HomePage(),
+        MyRoutes.SettingPage: (context) => const SettingPage(),
       },
     );
   }
