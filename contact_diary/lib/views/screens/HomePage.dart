@@ -21,24 +21,28 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.pushNamed(context, MyRoutes.SettingPage);
             },
-            icon: const Icon(CupertinoIcons.settings),
+            icon: const Icon(
+              CupertinoIcons.settings,
+            ),
           ),
         ],
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(12),
-        child: Center(
+      body: Padding(
+          padding: const EdgeInsets.all(12),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("You have no contacts yet..!!"),
+              Card(
+                child: ListTile(
+                  title: Text("Darshan Kapadiya"),
+                  subtitle: Text("8153801291"),
+                  leading: CircleAvatar(),
+                ),
+              )
             ],
-          ),
-        ),
-      ),
+          )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
