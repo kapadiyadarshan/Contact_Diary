@@ -1,6 +1,8 @@
+import 'package:contact_diary/Controllers/Contact_Controller.dart';
 import 'package:contact_diary/Controllers/Theme_Contoller.dart';
 import 'package:contact_diary/Helpers/Login_helper.dart';
 import 'package:contact_diary/utils/routes_utils.dart';
+import 'package:contact_diary/views/screens/AddContactPage.dart';
 import 'package:contact_diary/views/screens/HomePage.dart';
 import 'package:contact_diary/views/screens/IntroPage.dart';
 import 'package:contact_diary/views/screens/SettingPage.dart';
@@ -16,8 +18,15 @@ void main() async {
   LoginHelper.loginHelper.init(preferences: preferences);
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeController(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ThemeController(preferences: preferences),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ContactController(preferences: preferences),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -52,6 +61,7 @@ class MyApp extends StatelessWidget {
       routes: {
         MyRoutes.IntroPage: (context) => const IntroPage(),
         MyRoutes.HomePage: (context) => const HomePage(),
+        MyRoutes.AddContactPage: (context) => AddContactPage(),
         MyRoutes.SettingPage: (context) => const SettingPage(),
       },
     );
