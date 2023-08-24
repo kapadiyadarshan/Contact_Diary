@@ -2,9 +2,34 @@ import 'package:contact_diary/Controllers/Contact_Controller.dart';
 import 'package:contact_diary/Modal/contact_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatelessWidget {
   const DetailPage({super.key});
+
+  call({required String contactNo}) async {
+    Uri uri = Uri(
+      scheme: "tel",
+      path: contactNo,
+    );
+    await launchUrl(uri);
+  }
+
+  sms({required String contactNo}) async {
+    Uri uri = Uri(
+      scheme: "sms",
+      path: contactNo,
+    );
+    await launchUrl(uri);
+  }
+
+  mail({required String email}) async {
+    Uri uri = Uri(
+      scheme: "mailto",
+      path: email,
+    );
+    await launchUrl(uri);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +47,7 @@ class DetailPage extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Center(
           child:
               Consumer<ContactController>(builder: (context, provider, child) {
@@ -64,8 +89,12 @@ class DetailPage extends StatelessWidget {
                           radius: 28,
                           backgroundColor: Colors.grey.shade300,
                           child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.call),
+                            onPressed: () {
+                              call(contactNo: contact.contcatNo);
+                            },
+                            icon: const Icon(
+                              Icons.call,
+                            ),
                           ),
                         ),
                         const Text(
@@ -83,7 +112,9 @@ class DetailPage extends StatelessWidget {
                           radius: 28,
                           backgroundColor: Colors.grey.shade300,
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              sms(contactNo: contact.contcatNo);
+                            },
                             icon: const Icon(
                               Icons.message,
                             ),
@@ -105,7 +136,7 @@ class DetailPage extends StatelessWidget {
                           backgroundColor: Colors.grey.shade300,
                           child: IconButton(
                             onPressed: () {},
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.video_camera_front,
                             ),
                           ),
@@ -125,7 +156,9 @@ class DetailPage extends StatelessWidget {
                           radius: 28,
                           backgroundColor: Colors.grey.shade300,
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              mail(email: contact.email);
+                            },
                             icon: const Icon(
                               Icons.email,
                             ),
@@ -164,75 +197,90 @@ class DetailPage extends StatelessWidget {
                       const SizedBox(
                         height: 24,
                       ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.call,
-                            size: 32,
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${contact.contcatNo}",
-                                style: TextStyle(
-                                  fontSize: 16,
+                      //Mobile
+                      GestureDetector(
+                        onTap: () {
+                          call(contactNo: contact.contcatNo);
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.call,
+                              size: 32,
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  contact.contcatNo,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Mobile",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
+                                const Text(
+                                  "Mobile",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.video_camera_front_rounded),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.message),
-                          ),
-                        ],
+                              ],
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              onPressed: () {},
+                              icon:
+                                  const Icon(Icons.video_camera_front_rounded),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                sms(contactNo: contact.contcatNo);
+                              },
+                              icon: const Icon(Icons.message),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 12,
                       ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.email,
-                            size: 32,
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                contact.email,
-                                style: const TextStyle(
-                                  fontSize: 16,
+                      //Mail
+                      GestureDetector(
+                        onTap: () {
+                          mail(email: contact.email);
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.email,
+                              size: 32,
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  contact.email,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                              const Text(
-                                "Mail",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
+                                const Text(
+                                  "Mail",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
