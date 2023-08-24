@@ -15,7 +15,7 @@ class ThemeController extends ChangeNotifier {
 
   void changeTheme() {
     _isDark = !_isDark;
-    preferences.setBool("Theme", true);
+    preferences.setBool("Theme", _isDark);
     notifyListeners();
   }
 }

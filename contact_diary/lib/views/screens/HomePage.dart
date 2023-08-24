@@ -5,15 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int currentStep = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,18 +28,98 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(12),
         child: Consumer<ContactController>(
           builder: (context, provider, child) => ListView.builder(
-            itemCount: provider.allContactFirstName.length,
+            itemCount: provider.getAllContactList.length,
             itemBuilder: (context, index) {
-              Contact contact = provider.allContactList[index];
+              Contact contact = provider.getAllContactList[index];
 
               return Card(
                 child: ListTile(
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushNamed(MyRoutes.DetailPage, arguments: index);
+                  },
                   title: Text(
-                      "${provider.allContactFirstName[index]} ${provider.allContactLastName[index]}"),
-                  subtitle: Text(provider.allContactContact[index]),
+                    "${contact.firstName} ${contact.lastName}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(contact.contcatNo),
                   leading: CircleAvatar(
+                    radius: 24,
                     backgroundColor: Colors
                         .primaries[index % Colors.primaries.length].shade500,
+                    child: Text(
+                      contact.firstName[0].toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
+                  trailing: IconButton(
+                    onPressed: () {
+                      // provider.removeContact(contact: contact, index: index);
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text(
+                            "Are you sure delete ??",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          content: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text.rich(
+                                textAlign: TextAlign.center,
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          "${contact.firstName} ${contact.lastName}\n",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: contact.contcatNo,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          actionsAlignment: MainAxisAlignment.center,
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                provider.removeContact(
+                                    contact: contact, index: index);
+
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Yes"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("No"),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.delete_forever,
+                    ),
                   ),
                 ),
               );

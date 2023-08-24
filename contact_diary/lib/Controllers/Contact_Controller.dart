@@ -6,58 +6,87 @@ import '../Modal/contact_modal.dart';
 class ContactController extends ChangeNotifier {
   List<Contact> _allContacts = [];
 
-  List<String> _allContactsFirstName = [];
-  List<String> _allContactsLastName = [];
-  List<String> _allContactsEmail = [];
-  List<String> _allContactsContactNo = [];
-
   late SharedPreferences preferences;
 
   ContactController({required this.preferences});
 
-  get allContactList {
+  List<String> allFirstNames = [];
+  List<String> allLastNames = [];
+  List<String> allEmails = [];
+  List<String> allContactNo = [];
+
+  String sfFirstNames = "FirstNames";
+  String sfLastNames = "LastNames";
+  String sfEmails = "Emails";
+  String sfContactNo = "ContactNo";
+
+  init() {
+    allFirstNames = preferences.getStringList(sfFirstNames) ?? [];
+    allLastNames = preferences.getStringList(sfLastNames) ?? [];
+    allEmails = preferences.getStringList(sfEmails) ?? [];
+    allContactNo = preferences.getStringList(sfContactNo) ?? [];
+
+    _allContacts = List.generate(
+      allFirstNames.length,
+      (index) => Contact(
+        firstName: allFirstNames[index],
+        lastName: allLastNames[index],
+        email: allEmails[index],
+        contcatNo: allContactNo[index],
+      ),
+    );
+  }
+
+  set() {
+    preferences
+      ..setStringList(sfFirstNames, allFirstNames)
+      ..setStringList(sfLastNames, allLastNames)
+      ..setStringList(sfEmails, allEmails)
+      ..setStringList(sfContactNo, allContactNo);
+
+    notifyListeners();
+  }
+
+  get getAllContactList {
+    init();
     return _allContacts;
   }
 
-  get allContactFirstName {
-    _allContactsFirstName = preferences.getStringList("firstName")!;
-    return _allContactsFirstName;
-  }
-
-  get allContactLastName {
-    _allContactsLastName = preferences.getStringList("lastName")!;
-    return _allContactsLastName;
-  }
-
-  get allContactEmail {
-    _allContactsEmail = preferences.getStringList("email")!;
-    return _allContactsEmail;
-  }
-
-  get allContactContact {
-    _allContactsContactNo = preferences.getStringList("contact")!;
-    return _allContactsContactNo;
-  }
-
   addContact({required Contact contact}) {
+    init();
     if (!_allContacts.contains(contact)) {
       _allContacts.add(contact);
+
+      allFirstNames.add(contact.firstName);
+      allLastNames.add(contact.lastName!);
+      allEmails.add(contact.email);
+      allContactNo.add(contact.contcatNo);
+
+      set();
     }
-    _allContactsFirstName.add(contact.firstName);
-    _allContactsLastName.add(contact.lastName!);
-    _allContactsEmail.add(contact.email);
-    _allContactsContactNo.add(contact.contcatNo);
-
-    preferences.setStringList("firstName", _allContactsFirstName);
-    preferences.setStringList("lastName", _allContactsLastName);
-    preferences.setStringList("email", _allContactsEmail);
-    preferences.setStringList("contact", _allContactsContactNo);
-
-    notifyListeners();
   }
 
-  removeContact({required Contact contact}) {
-    _allContacts.remove(contact);
-    notifyListeners();
+  removeContact({required Contact contact, required int index}) {
+    init();
+
+    // int index = _allContacts.indexOf(contact);
+
+    allFirstNames.removeAt(index);
+    allLastNames.removeAt(index);
+    allEmails.removeAt(index);
+    allContactNo.removeAt(index);
+
+    set();
+  }
+
+  editContact({required int index, required Contact contact}) {
+    init();
+
+    allFirstNames[index] = contact.firstName;
+    allLastNames[index] = contact.lastName!;
+    allEmails[index] = contact.email;
+    allContactNo[index] = contact.contcatNo;
+
+    set();
   }
 }
