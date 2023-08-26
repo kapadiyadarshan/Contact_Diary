@@ -4,6 +4,7 @@ import 'package:contact_diary/Helpers/Login_helper.dart';
 import 'package:contact_diary/utils/routes_utils.dart';
 import 'package:contact_diary/views/screens/AddContactPage.dart';
 import 'package:contact_diary/views/screens/DetailPage.dart';
+import 'package:contact_diary/views/screens/HiddenContactPage.dart';
 import 'package:contact_diary/views/screens/HomePage.dart';
 import 'package:contact_diary/views/screens/IntroPage.dart';
 import 'package:contact_diary/views/screens/SettingPage.dart';
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         MyRoutes.AddContactPage: (context) => AddContactPage(),
         MyRoutes.DetailPage: (context) => const DetailPage(),
         MyRoutes.SettingPage: (context) => const SettingPage(),
+        MyRoutes.HiddenContactPage: (context) => const HiddenContactPage(),
       },
     );
   }

@@ -2,6 +2,7 @@ import 'package:contact_diary/Controllers/Contact_Controller.dart';
 import 'package:contact_diary/Modal/contact_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatelessWidget {
@@ -128,27 +129,6 @@ class DetailPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    //Video
-                    Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 28,
-                          backgroundColor: Colors.grey.shade300,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.video_camera_front,
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          "Video",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
                     //Email
                     Column(
                       children: [
@@ -166,6 +146,30 @@ class DetailPage extends StatelessWidget {
                         ),
                         const Text(
                           "Email",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    //Video
+                    Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 28,
+                          backgroundColor: Colors.grey.shade300,
+                          child: IconButton(
+                            onPressed: () async {
+                              await Share.share(
+                                  "Name: ${contact.firstName} ${contact.lastName}\nContact: ${contact.contcatNo}\nEmail: ${contact.email}");
+                            },
+                            icon: const Icon(
+                              Icons.share,
+                            ),
+                          ),
+                        ),
+                        const Text(
+                          "Share",
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                           ),

@@ -3,6 +3,7 @@ import 'package:contact_diary/Modal/contact_modal.dart';
 import 'package:contact_diary/utils/routes_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,13 +15,47 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Contacts"),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, MyRoutes.SettingPage);
+          PopupMenuButton(
+            offset: const Offset(50, 50),
+            onSelected: (value) async {
+              if (value == MyRoutes.HiddenContactPage) {
+                LocalAuthentication auth = LocalAuthentication();
+
+                bool done = await auth.authenticate(
+                    localizedReason: "Open to access hidden contacts !!");
+
+                if (done) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Authentication done !!"),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  Navigator.of(context).pushNamed(value);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Authentication failed !!"),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              } else {
+                Navigator.pushNamed(context, value);
+              }
             },
-            icon: const Icon(
-              CupertinoIcons.settings,
-            ),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: MyRoutes.SettingPage,
+                child: const Text("Settings"),
+              ),
+              PopupMenuItem(
+                value: MyRoutes.HiddenContactPage,
+                child: const Text("Hidden Contact"),
+              ),
+            ],
           ),
         ],
       ),
